@@ -3,10 +3,11 @@
      height: 100%;
  }
 
-.chessBoard{
+.table1{
     position: absolute;
     top:15%;
-    left: 30%;
+    left:32%;
+
 }
 
 .square {
@@ -17,9 +18,215 @@
 }
 
 .blacksquare {
-    background-color: black;
+    background-color: rgb(53, 51, 51);
 }
 
 .whitesquare {
-    background-color: white;
+    background-color: rgb(224, 218, 218);
+}
+
+.pieces{
+    width: fit-content;
+    height: 80px;
+    padding: 14px;
+}
+
+.selected{
+    background-color: #a67f7e;
+}
+
+.suggest{
+    background-color: aquamarine;
+}
+.square-a1{
+    position: absolute;
+    bottom:0px;
+    left:0; 
+}
+
+.square-b1{
+    position: absolute;
+    bottom:0%;
+    left:12.5%; 
+}
+
+.square-c1{
+    position: absolute;
+    bottom:0%;
+    left:25%; 
+}
+
+.square-d1{
+    position: absolute;
+    bottom:0%;
+    left:37.5%; 
+}
+
+.square-e1{
+    position: absolute;
+    bottom:0%;
+    left:50%; 
+}
+ 
+.square-f1{
+    position: absolute;
+    bottom:0%;
+    left:62.5%; 
+}
+
+.square-g1{
+    position: absolute;
+    bottom:0%;
+    left:75%; 
+}
+
+.square-h1{
+    position: absolute;
+    bottom:0%;
+    left:87.5%; 
+}
+
+.square-a2{
+    position: absolute;
+    bottom:13%;
+    left:0%; 
+}
+
+.square-b2{
+    position: absolute;
+    bottom:13%;
+    left:12.5%; 
+}
+
+.square-c2{
+    position: absolute;
+    bottom:13%;
+    left:25%; 
+}
+
+.square-d2{
+    position: absolute;
+    bottom:13%;
+    left:37.5%; 
+}
+
+.square-e2{
+    position: absolute;
+    bottom:13%;
+    left:50%; 
+}
+ 
+.square-f2{
+    position: absolute;
+    bottom:13%;
+    left:62%; 
+}
+
+.square-g2{
+    position: absolute;
+    bottom:13%;
+    left:75%; 
+}
+
+.square-h2{
+    position: absolute;
+    bottom:13%;
+    left:87.5%; 
+}
+
+
+.square-a8{
+    position: absolute;
+    bottom:89.5%;
+    left:2%; 
+}
+
+.square-b8{
+    position: absolute;
+    bottom:89.5%;
+    left:14%; 
+}
+
+.square-c8{
+    position: absolute;
+    bottom:89.5%;
+    left:27%; 
+}
+
+.square-d8{
+    position: absolute;
+    bottom:89.5%;
+    left:39.5%; 
+}
+
+.square-e8{
+    position: absolute;
+    bottom:89.5%;
+    left:52%; 
+}
+ 
+.square-f8{
+    position: absolute;
+    bottom:89.5%;
+    left:64%; 
+}
+
+.square-g8{
+    position: absolute;
+    bottom:89.5%;
+    left:77%; 
+}
+
+.square-h8{
+    position: absolute;
+    bottom:89.5%;
+    left:89.5%; 
+}
+
+.square-a7{
+    position: absolute;
+    bottom:77%;
+    left:2%; 
+}
+
+.square-b7{
+    position: absolute;
+    bottom:77%;
+    left:14%; 
+}
+
+.square-c7{
+    position: absolute;
+    bottom:77%;
+    left:27%; 
+}
+
+.square-d7{
+    position: absolute;
+    bottom:77%;
+    left:39.5%; 
+}
+
+.square-e7{
+    position: absolute;
+    bottom:77%;
+    left:52%; 
+}
+ 
+.square-f7{
+    position: absolute;
+    bottom:77%;
+    left:64%; 
+}
+
+.square-g7{
+    position: absolute;
+    bottom:77%;
+    left:77%; 
+}
+
+.square-h7{
+    position: absolute;
+    bottom:77%;
+    left:89.5%; 
 }
