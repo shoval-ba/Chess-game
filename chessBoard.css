@@ -35,9 +35,12 @@
     background-color: #a67f7e;
 }
 
-.suggest{
+.possible-move{
     background-color: aquamarine;
 }
+
+
+
 .square-a1{
     position: absolute;
     bottom:0px;
