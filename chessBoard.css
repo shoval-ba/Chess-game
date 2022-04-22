@@ -39,6 +39,26 @@
     background-color: #775f7c;
 }
 
+.background{
+    position: absolute;
+    top:3%;
+    left:25%;
+    width: 1200px;
+    height: 1200px;
+    background-color: gainsboro;
+}
 
+.h1{
+    position: absolute;
+    top:-1%;
+    left:35%;
+    font-size: 60px;
+    font-family: 'Courier New', Courier, monospace;
+    color: rgb(82, 66, 46);
+}
 
-
+.turn{
+    position: absolute;
+    top:7.5%;
+    left:43.5%;
+}

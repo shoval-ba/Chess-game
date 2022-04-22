@@ -59,7 +59,7 @@ class Piece {
     this.col = col;
   }
 
-// where the pieces can move
+  // where the pieces can move
   possibleMoves() {
     let filteredMoves;
     if (this.type === PAWN) {
@@ -87,7 +87,7 @@ class Piece {
     return -1 < row && row < 8 && -1 < col && col < 8
   }
 
-// if the player is black or white
+  // if the player is black or white
   isBlack(val = 0) {
     if (val) {
       return this.player.includes('black') ? val : -val
@@ -334,13 +334,24 @@ function onCellClick(event, row, col) {
   // move the pieces
   if (pieceOld != null) {
     if (table.rows[row].cells[col].classList.contains('possible-move')) {
+      if (pieceOld.piece.player === WHITE_PLAYER) {
+        turn.textContent = "black turn"
+      }
+      else {
+        turn.textContent = "white turn"
+      }
       let image = pieceOld.getCell().firstChild;
       table.rows[row].cells[col].appendChild(image);
       boardData.getPiece(pieceOld.piece.row, pieceOld.piece.col).changeLocation(row, col);
       pieceOld = null;
+      
+      // if (table.rows[row].cells[col] === table.rows[piece.row].cells[piece.col]) {
+      //   otherCell = table.rows[piece.row].cells[piece.col];
+      //   table.rows[row].cells[col].removeChild(otherCell);
+      // }
     }
+    
   }
-
 
   for (let i = 0; i < 8; i++) {
     for (let j = 0; j < 8; j++) {
@@ -362,6 +373,13 @@ function onCellClick(event, row, col) {
         table.rows[possibleMove[0]].cells[possibleMove[1]].classList.add('possible-move');
     }
   }
+
+  // if (pieceOld.piece.player === WHITE_PLAYER) {
+  //   turn.textContent = "black turn"
+  // }
+  // else {
+  //   turn.textContent = "white turn"
+  // }
 }
 
 // add the pieces
@@ -396,6 +414,26 @@ function addImage(cell, player, type) {
 
 // create chess board html
 function createChessBoard() {
+  // create background
+  background= document.createElement('div');
+  document.body.appendChild(background);
+  background.classList.add("background")
+
+  // create a title
+  heading= document.createElement('H1');
+  textNode = document.createTextNode("Chess game");
+  heading.appendChild(textNode)
+  background.appendChild(heading);
+  heading.classList.add("h1")
+
+  // create white turn/black turn
+  turn= document.createElement('H1');
+  textNodeTurn = document.createTextNode("white turn");
+  turn.appendChild(textNodeTurn)
+  background.appendChild(turn);
+  turn.classList.add("turn");
+
+
   table = document.createElement('table');
   table.className = "table1"
   document.body.appendChild(table);
@@ -418,7 +456,6 @@ function createChessBoard() {
   for (let piece of boardData.pieces) {
     addImage(table.rows[piece.row].cells[piece.col], piece.player, piece.type);
   }
-
 
 }
 
