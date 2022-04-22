@@ -382,7 +382,7 @@ function addPieces(result, row, player) {
 
 function addImage(cell, player, type) {
   const image = document.createElement('img');
-  image.src = player + "." + type + '.png';
+  image.src = "images/" + player + "." + type + '.png';
   image.className = "pieces"
   cell.appendChild(image);
 }
