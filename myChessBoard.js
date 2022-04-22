@@ -12,6 +12,20 @@ const QUEEN = "queen";
 let selectedCell;
 let pieces = [];
 let table;
+let pieceOld = null;
+let cell;
+
+class state {
+  constructor(piece , cell) {
+    this.piece = piece;
+    this.cell = cell;
+    this.turn = 1;
+  }
+
+  getCell(){
+    return this.cell
+  }
+}
 
 class BoardData {
   constructor(pieces) {
@@ -29,7 +43,7 @@ class BoardData {
   }
 }
 
-let boardData = new BoardData()
+
 class Piece {
   constructor(row, col, type, player) {
     this.row = row;
@@ -37,54 +51,38 @@ class Piece {
     this.type = type;
     this.player = player;
   }
+  //isEmpty(){
 
-  changer(row, col) {
+  //}
+  changeLocation(row, col) {
     this.row = row;
     this.col = col;
   }
 
 
-  getPossibleMoves() {
+  possibleMoves() {
     let filteredMoves;
     if (this.type === PAWN) {
-      filteredMoves = this.getPawnRelativeMoves(this.player);
+      filteredMoves = this.pawnMoves(this.player);
     } else if (this.type === ROOK) {
-      filteredMoves = this.getRookRelativeMoves();
+      filteredMoves = this.rookMoves();
     } else if (this.type === KNIGHT) {
-      filteredMoves = this.getKnightRelativeMoves();
+      filteredMoves = this.knightMoves();
     } else if (this.type === BISHOP) {
-      filteredMoves = this.getBishopRelativeMoves();
+      filteredMoves = this.bishopMoves();
     } else if (this.type === KING) {
-      filteredMoves = this.getKingRelativeMoves();
+      filteredMoves = this.kingMoves();
     } else if (this.type === QUEEN) {
-      filteredMoves = this.getQueenRelativeMoves();
+      filteredMoves = this.queenMoves();
     }
     else {
       consoloe.log("Unknown type , type")
     }
 
-    // let absoluteMoves = [];
-    // for (let relativeMove of relativeMoves) {
-    //   const absoluteRow = this.row + relativeMove[0];
-    //   const absoluteCol = this.col + relativeMove[1];
-    //   absoluteMoves.push([absoluteRow, absoluteCol]);
-    // }
-
-    // let filteredMoves = [];
-    // for (let absoluteMove of absoluteMoves) {
-    //   const absoluteRow = absoluteMove[0];
-    //   const absoluteCol = absoluteMove[1];
-    //   if (absoluteRow >= 0 && absoluteRow <= 7 && absoluteCol >= 0 && absoluteCol <= 7) {
-    //     // if (boardData.getPiece(absoluteRow, absoluteCol) === undefined) {
-    //       filteredMoves.push(absoluteMove);
-    //     // }
-    //   }
-    // }
-    // console.log(filteredMoves)
     return filteredMoves;
   }
 
-  isExist(row , col){
+  isExist(row, col) {
     return -1 < row && row < 8 && -1 < col && col < 8
   }
 
@@ -96,7 +94,7 @@ class Piece {
     return this.player.includes('black')
   }
 
-  getPawnRelativeMoves() {
+  pawnMoves() {
     let moves = []
 
     let col = this.col
@@ -147,7 +145,7 @@ class Piece {
 
   }
 
-  getRookRelativeMoves() {
+  rookMoves() {
     let moves = [];
     let row = this.row
     let col = this.col
@@ -164,6 +162,7 @@ class Piece {
       } else break
     }
 
+    // top
     for (let i = row - 1; i > -1; i--) {
       let isOccupied = boardData.getPiece(i, col)
       if (!isOccupied || (this.player !== isOccupied.player)) {
@@ -174,6 +173,7 @@ class Piece {
       } else break
     }
 
+    // right
     for (let i = col + 1; i < 8; i++) {
       let isOccupied = boardData.getPiece(row, i)
       if (!isOccupied || (this.player !== isOccupied.player)) {
@@ -184,6 +184,7 @@ class Piece {
       } else break
     }
 
+    // left
     for (let i = col - 1; i > -1; i--) {
       let isOccupied = boardData.getPiece(row, i)
       if (!isOccupied || (this.player !== isOccupied.player)) {
@@ -194,54 +195,38 @@ class Piece {
       } else break
     }
 
-    // for (let i = 1; i < BOARD_SIZE; i++) {
-    //   result.push([i, 0]);
-    //   result.push([-i, 0]);
-    //   result.push([0, i]);
-    //   result.push([0, -i]);
-    // }
     return moves;
   }
 
-  getKingRelativeMoves() {
+  kingMoves() {
 
     let row = this.row;
     let col = this.col;
 
     let moves = [
-      [row+1, col+1],
-      [row+1, col-1],
-      [row+1, col],
-      [row-1, col-1],
-      [row-1, col+1],
-      [row-1, col],
-      [row, col-1],
-      [row, col+1]
+      [row + 1, col + 1],
+      [row + 1, col - 1],
+      [row + 1, col],
+      [row - 1, col - 1],
+      [row - 1, col + 1],
+      [row - 1, col],
+      [row, col - 1],
+      [row, col + 1]
     ];
 
-    moves = moves.filter((move)=> {
-      if(!this.isExist(move[0] , move[1]))
+    moves = moves.filter((move) => {
+      if (!this.isExist(move[0], move[1]))
         return false;
-      let isOccupied = boardData.getPiece(move[0] , move[1])
+      let isOccupied = boardData.getPiece(move[0], move[1])
       if (!isOccupied || (this.player !== isOccupied.player))
         return true;
       return false
     })
 
     return moves;
-
-  //   let result = [];
-  //   for (let row = -1; row <= 1; row++) {
-  //     for (let col = -1; col <= 1; col++) {
-  //       if (!(row === 0 && col === 0)) {
-  //         result.push([row, col])
-  //       }
-  //     }
-  //   }
-  //   return result;
   }
 
-  getBishopRelativeMoves() {
+  bishopMoves() {
     let moves = [];
 
     let row = this.row;
@@ -249,6 +234,7 @@ class Piece {
     let temp1 = col + 1;
     let temp2 = col - 1;
 
+    // down and right
     for (let i = row + 1; i < 8; i++) {
       let isOccupied = boardData.getPiece(i, temp1)
       if ((!isOccupied || (this.player !== isOccupied.player)) && temp1 < 8) {
@@ -259,6 +245,7 @@ class Piece {
       } else temp1 = 8
       temp1++
 
+      // down and left
       isOccupied = boardData.getPiece(i, temp2)
       if ((!isOccupied || (this.player !== isOccupied.player)) && temp2 > -1) {
         moves.push([i, temp2])
@@ -269,6 +256,7 @@ class Piece {
       temp2--
     }
 
+    // up and right
     temp1 = col + 1
     temp2 = col - 1
     for (let i = row - 1; i > -1; i--) {
@@ -281,6 +269,7 @@ class Piece {
       } else temp1 = 8;
       temp1++
 
+      // up and left
       isOccupied = boardData.getPiece(i, temp2)
       if ((!isOccupied || (this.player !== isOccupied.player)) && temp2 > -1) {
         moves.push([i, temp2])
@@ -292,75 +281,61 @@ class Piece {
 
     }
 
-
-    // for (let i = 1; i < BOARD_SIZE; i++) {
-    //   result.push([i, i]);
-    //   result.push([-i, i]);
-    //   result.push([i, -i]);
-    //   result.push([-i, -i]);
-
-    // }
     return moves;
   }
 
-  getKnightRelativeMoves() {
+  knightMoves() {
     let row = this.row;
     let col = this.col;
 
     let moves = [
-      [row+2, col+1],
-      [row+2, col-1],
-      [row+1, col+2],
-      [row+1, col-2],
-      [row-2, col+1],
-      [row-2, col-1],
-      [row-1, col-2],
-      [row-1, col+2]
+      [row + 2, col + 1],
+      [row + 2, col - 1],
+      [row + 1, col + 2],
+      [row + 1, col - 2],
+      [row - 2, col + 1],
+      [row - 2, col - 1],
+      [row - 1, col - 2],
+      [row - 1, col + 2]
     ];
 
-    moves = moves.filter((move)=> {
-      if(!this.isExist(move[0] , move[1]))
+    moves = moves.filter((move) => {
+      if (!this.isExist(move[0], move[1]))
         return false;
-      let isOccupied = boardData.getPiece(move[0] , move[1])
+      let isOccupied = boardData.getPiece(move[0], move[1])
       if (!isOccupied || (this.player !== isOccupied.player))
         return true;
       return false
     })
 
-
-    // for (let row = -2; row <= 2; row++) {
-    //   for (let col = -2; col <= 2; col++) {
-    //     if (!(row === 0 || col === 0)) {
-    //       if (!(row === col || row === -col)) {
-    //         result.push([row, col])
-    //       }
-    //     }
-    //   }
-    // }
     return moves;
   }
 
-  getQueenRelativeMoves() {
+  queenMoves() {
     let moves = [];
 
-    moves.push(...this.getBishopRelativeMoves());
-    moves.push(...this.getRookRelativeMoves());
+    moves.push(...this.bishopMoves());
+    moves.push(...this.rookMoves());
 
-    // for (let i = 1; i < BOARD_SIZE; i++) {
-    //   result.push([i, i]);
-    //   result.push([-i, i]);
-    //   result.push([i, -i]);
-    //   result.push([-i, -i]);
-    //   result.push([i, 0]);
-    //   result.push([-i, 0]);
-    //   result.push([0, i]);
-    //   result.push([0, -i]);
-    // }
     return moves;
   }
 }
 
+// when you click on one piece
 function onCellClick(event, row, col) {
+
+  //let pieceOld = event.currentTarget;
+
+  if (pieceOld != null) {
+    if(table.rows[row].cells[col].classList.contains('possible-move')){
+      let image = pieceOld.getCell().firstChild;
+      table.rows[row].cells[col].appendChild(image);
+      boardData.getPiece(pieceOld.piece.row,pieceOld.piece.col).changeLocation(row,col);
+      pieceOld = null;
+    }
+  }
+  
+
   for (let i = 0; i < 8; i++) {
     for (let j = 0; j < 8; j++) {
       table.rows[i].cells[j].classList.remove('possible-move');
@@ -368,18 +343,18 @@ function onCellClick(event, row, col) {
     }
   }
 
+  selectedCell = event.currentTarget;
+  selectedCell.classList.add('selected');
+
   // Show possible moves
   for (let piece of boardData.pieces) {
     if (piece.row === row && piece.col === col) {
-      //console.log(piece);
-      let possibleMoves = piece.getPossibleMoves();
+      pieceOld = new state(piece , selectedCell);
+      let possibleMoves = piece.possibleMoves();
       for (let possibleMove of possibleMoves)
         table.rows[possibleMove[0]].cells[possibleMove[1]].classList.add('possible-move');
     }
   }
-
-  selectedCell = event.currentTarget;
-  selectedCell.classList.add('selected');
 }
 
 // FUNCTION THAT ADD THE PICESES
@@ -411,6 +386,12 @@ function addImage(cell, player, type) {
   image.className = "pieces"
   cell.appendChild(image);
 }
+function removeImage(cell, player, type) {
+  const image = document.createElement('img');
+  image.src = player + "." + type + '.png';
+  image.className = "pieces"
+  // cell.removeChild();
+}
 
 
 
@@ -422,7 +403,7 @@ function createChessBoard() {
   for (let row = 0; row < BOARD_SIZE; row++) {
     const rowElement = table.insertRow();
     for (let col = 0; col < BOARD_SIZE; col++) {
-      const cell = rowElement.insertCell();
+      cell = rowElement.insertCell();
       if ((row + col) % 2 === 0) {
         cell.className = "square blacksquare";
       } else {
@@ -432,16 +413,18 @@ function createChessBoard() {
     }
   }
 
+
   // add pieces to the board
+
   boardData = new BoardData(piecesOnBoard());
-  // boardData.getPiece(0, 3).changer(5, 4)
-  // boardData.getPiece(7, 3).changer(5, 6)
-  // boardData.getPiece(7,0).changer(5,2)
-  // boardData.getPiece(7,7).changer(5,6)
+  //boardData.getPiece(7,0).changeLocation(5,2)
+  //boardData.getPiece(7,1).changeLocation(5,6)
 
   for (let piece of boardData.pieces) {
     addImage(table.rows[piece.row].cells[piece.col], piece.player, piece.type);
   }
+
+
 }
 
 window.addEventListener('load', createChessBoard);
