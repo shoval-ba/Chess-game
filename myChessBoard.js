@@ -16,13 +16,13 @@ let pieceOld = null;
 let cell;
 
 class state {
-  constructor(piece , cell) {
+  constructor(piece, cell) {
     this.piece = piece;
     this.cell = cell;
-    this.turn = 1;
+    this.turn = 1; // 1 for the white player 0 for the black player
   }
 
-  getCell(){
+  getCell() {
     return this.cell
   }
 }
@@ -59,7 +59,7 @@ class Piece {
     this.col = col;
   }
 
-
+// where the pieces can move
   possibleMoves() {
     let filteredMoves;
     if (this.type === PAWN) {
@@ -82,11 +82,12 @@ class Piece {
     return filteredMoves;
   }
 
+  // if the cell on the board
   isExist(row, col) {
     return -1 < row && row < 8 && -1 < col && col < 8
   }
 
-
+// if the player is black or white
   isBlack(val = 0) {
     if (val) {
       return this.player.includes('black') ? val : -val
@@ -94,6 +95,7 @@ class Piece {
     return this.player.includes('black')
   }
 
+  //  where the pawn can move
   pawnMoves() {
     let moves = []
 
@@ -145,6 +147,7 @@ class Piece {
 
   }
 
+  //  where the rook can move
   rookMoves() {
     let moves = [];
     let row = this.row
@@ -198,6 +201,7 @@ class Piece {
     return moves;
   }
 
+  //  where the king can move
   kingMoves() {
 
     let row = this.row;
@@ -226,6 +230,7 @@ class Piece {
     return moves;
   }
 
+  //  where the bishop can move
   bishopMoves() {
     let moves = [];
 
@@ -284,6 +289,7 @@ class Piece {
     return moves;
   }
 
+  //  where the knight can move
   knightMoves() {
     let row = this.row;
     let col = this.col;
@@ -311,6 +317,7 @@ class Piece {
     return moves;
   }
 
+  //  where the queen can move
   queenMoves() {
     let moves = [];
 
@@ -324,17 +331,16 @@ class Piece {
 // when you click on one piece
 function onCellClick(event, row, col) {
 
-  //let pieceOld = event.currentTarget;
-
+  // move the pieces
   if (pieceOld != null) {
-    if(table.rows[row].cells[col].classList.contains('possible-move')){
+    if (table.rows[row].cells[col].classList.contains('possible-move')) {
       let image = pieceOld.getCell().firstChild;
       table.rows[row].cells[col].appendChild(image);
-      boardData.getPiece(pieceOld.piece.row,pieceOld.piece.col).changeLocation(row,col);
+      boardData.getPiece(pieceOld.piece.row, pieceOld.piece.col).changeLocation(row, col);
       pieceOld = null;
     }
   }
-  
+
 
   for (let i = 0; i < 8; i++) {
     for (let j = 0; j < 8; j++) {
@@ -346,10 +352,11 @@ function onCellClick(event, row, col) {
   selectedCell = event.currentTarget;
   selectedCell.classList.add('selected');
 
+
   // Show possible moves
   for (let piece of boardData.pieces) {
     if (piece.row === row && piece.col === col) {
-      pieceOld = new state(piece , selectedCell);
+      pieceOld = new state(piece, selectedCell);
       let possibleMoves = piece.possibleMoves();
       for (let possibleMove of possibleMoves)
         table.rows[possibleMove[0]].cells[possibleMove[1]].classList.add('possible-move');
@@ -357,7 +364,7 @@ function onCellClick(event, row, col) {
   }
 }
 
-// FUNCTION THAT ADD THE PICESES
+// add the pieces
 function piecesOnBoard() {
   let result = [];
   addPieces(result, 0, BLACK_PLAYER);
@@ -386,14 +393,6 @@ function addImage(cell, player, type) {
   image.className = "pieces"
   cell.appendChild(image);
 }
-function removeImage(cell, player, type) {
-  const image = document.createElement('img');
-  image.src = player + "." + type + '.png';
-  image.className = "pieces"
-  // cell.removeChild();
-}
-
-
 
 // create chess board html
 function createChessBoard() {
@@ -413,12 +412,8 @@ function createChessBoard() {
     }
   }
 
-
   // add pieces to the board
-
   boardData = new BoardData(piecesOnBoard());
-  //boardData.getPiece(7,0).changeLocation(5,2)
-  //boardData.getPiece(7,1).changeLocation(5,6)
 
   for (let piece of boardData.pieces) {
     addImage(table.rows[piece.row].cells[piece.col], piece.player, piece.type);
@@ -427,4 +422,5 @@ function createChessBoard() {
 
 }
 
+// call the function who crate the board
 window.addEventListener('load', createChessBoard);
