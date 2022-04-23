@@ -14,12 +14,13 @@ let pieces = [];
 let table;
 let pieceOld = null;
 let cell;
+let opponent = true; // 1 for the white player 0 for the black player
 
 class state {
   constructor(piece, cell) {
     this.piece = piece;
     this.cell = cell;
-    this.turn = 1; // 1 for the white player 0 for the black player
+
   }
 
   getCell() {
@@ -344,13 +345,15 @@ function onCellClick(event, row, col) {
       table.rows[row].cells[col].appendChild(image);
       boardData.getPiece(pieceOld.piece.row, pieceOld.piece.col).changeLocation(row, col);
       pieceOld = null;
-      
+      opponent = !opponent;
+
+
       // if (table.rows[row].cells[col] === table.rows[piece.row].cells[piece.col]) {
       //   otherCell = table.rows[piece.row].cells[piece.col];
       //   table.rows[row].cells[col].removeChild(otherCell);
       // }
     }
-    
+
   }
 
   for (let i = 0; i < 8; i++) {
@@ -364,23 +367,35 @@ function onCellClick(event, row, col) {
   selectedCell.classList.add('selected');
 
 
-  // Show possible moves
+  
+
+  // Show possible moves to the white player when it`s turn
+
   for (let piece of boardData.pieces) {
     if (piece.row === row && piece.col === col) {
-      pieceOld = new state(piece, selectedCell);
-      let possibleMoves = piece.possibleMoves();
-      for (let possibleMove of possibleMoves)
-        table.rows[possibleMove[0]].cells[possibleMove[1]].classList.add('possible-move');
+      if (piece.player == WHITE_PLAYER && opponent) {
+        pieceOld = new state(piece, selectedCell);
+        let possibleMoves = piece.possibleMoves();
+        for (let possibleMove of possibleMoves)
+          table.rows[possibleMove[0]].cells[possibleMove[1]].classList.add('possible-move');
+      }
     }
   }
 
-  // if (pieceOld.piece.player === WHITE_PLAYER) {
-  //   turn.textContent = "black turn"
-  // }
-  // else {
-  //   turn.textContent = "white turn"
-  // }
+  // Show possible moves to the black player when it`s turn
+
+  for (let piece of boardData.pieces) {
+    if (piece.row === row && piece.col === col) {
+      if (piece.player == BLACK_PLAYER && !opponent) {
+        pieceOld = new state(piece, selectedCell);
+        let possibleMoves = piece.possibleMoves();
+        for (let possibleMove of possibleMoves)
+          table.rows[possibleMove[0]].cells[possibleMove[1]].classList.add('possible-move');
+      }
+    }
+  }
 }
+
 
 // add the pieces
 function piecesOnBoard() {
@@ -415,19 +430,19 @@ function addImage(cell, player, type) {
 // create chess board html
 function createChessBoard() {
   // create background
-  background= document.createElement('div');
+  background = document.createElement('div');
   document.body.appendChild(background);
   background.classList.add("background")
 
   // create a title
-  heading= document.createElement('H1');
+  heading = document.createElement('H1');
   textNode = document.createTextNode("Chess game");
   heading.appendChild(textNode)
   background.appendChild(heading);
   heading.classList.add("h1")
 
   // create white turn/black turn
-  turn= document.createElement('H1');
+  turn = document.createElement('H1');
   textNodeTurn = document.createTextNode("white turn");
   turn.appendChild(textNodeTurn)
   background.appendChild(turn);
