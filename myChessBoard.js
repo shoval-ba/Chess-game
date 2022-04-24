@@ -31,6 +31,7 @@ class state {
 class BoardData {
   constructor(pieces) {
     this.pieces = pieces;
+    this.turn = WHITE_PLAYER
   }
 
   // Returns piece in row, col, or undefined if not exists.
@@ -42,6 +43,21 @@ class BoardData {
     }
     return false;
   }
+
+  setLocation(row, col, piece) {
+    if (this.turn == piece.player) {
+      const isOccupied = this.getPiece(row, col)
+      if (isOccupied)
+        isOccupied.deletePiece()
+      piece.MoveLocation(row, col)
+      this.nextTurn()
+    }
+
+  }
+
+  nextTurn() {
+    this.turn = this.turn == WHITE_PLAYER ? BLACK_PLAYER : WHITE_PLAYER
+  }
 }
 
 
@@ -51,13 +67,35 @@ class Piece {
     this.col = col;
     this.type = type;
     this.player = player;
+    this.deleted = false
+    this.initializePiece()
   }
-  //isEmpty(){
 
-  //}
+  initializePiece() {
+    this.image = document.createElement('img');
+    this.image.src = "images/" + this.player + "." + this.type + '.png';
+    this.image.className = "pieces"
+    this.appendPiece()
+  }
+
+  appendPiece() {
+    const cell = table.rows[this.row].cells[this.col]
+    cell.appendChild(this.image);
+  }
+  MoveLocation(row, col) {
+    this.changeLocation(row, col)
+    this.appendPiece()
+  }
+
   changeLocation(row, col) {
     this.row = row;
     this.col = col;
+  }
+  deletePiece() {
+    this.image.remove()
+    this.deleted = true
+    this.row = -1
+    this.col = -1
   }
 
   // where the pieces can move
@@ -112,7 +150,7 @@ class Piece {
     }
 
 
-    // can it front left
+    // can i eat front left
 
     let locationOccupied = boardData.getPiece(row + this.isBlack(1), col - 1)
     if (locationOccupied && locationOccupied.player !== this.player) {
@@ -128,23 +166,6 @@ class Piece {
     }
 
     return moves;
-
-    // if (this.row === 6) {
-    //   if (player === WHITE_PLAYER) {
-    //     return [[-1, 0], [-2, 0]]
-    //   }
-    // }
-    // else if (player === WHITE_PLAYER) {
-    //   return [[-1, 0]]
-    // }
-    // if (this.row === 1) {
-    //   if (player === BLACK_PLAYER) {
-    //     return [[1, 0], [2, 0]]
-    //   }
-    // }
-    // else if (player === BLACK_PLAYER) {
-    //   return [[1, 0]]
-    // }
 
   }
 
@@ -327,6 +348,8 @@ class Piece {
 
     return moves;
   }
+
+
 }
 
 // when you click on one piece
@@ -334,27 +357,41 @@ function onCellClick(event, row, col) {
 
   // move the pieces
   if (pieceOld != null) {
-    if (table.rows[row].cells[col].classList.contains('possible-move')) {
+    let newLocation = event.currentTarget;
+    if (newLocation.classList.contains('possible-move')) {
       if (pieceOld.piece.player === WHITE_PLAYER) {
-        turn.textContent = "black turn"
+        turn.textContent = "black turn";
       }
-      else {
-        turn.textContent = "white turn"
-      }
-      let image = pieceOld.getCell().firstChild;
-      table.rows[row].cells[col].appendChild(image);
-      boardData.getPiece(pieceOld.piece.row, pieceOld.piece.col).changeLocation(row, col);
-      pieceOld = null;
-      opponent = !opponent;
-    }
-  }
+      else
+        turn.textContent = "white turn";
 
-  for (let i = 0; i < 8; i++) {
-    for (let j = 0; j < 8; j++) {
-      table.rows[i].cells[j].classList.remove('possible-move');
-      table.rows[i].cells[j].classList.remove('selected');
+      boardData.setLocation(row, col, pieceOld.piece)
+      //   let image = pieceOld.getCell().firstChild;
+      //   newLocation.appendChild(image);
+      //   boardData.getPiece(pieceOld.piece.row, pieceOld.piece.col).changeLocation(row, col);
+      pieceOld = null;
+      //   opponent = !opponent;
+
+      //   if (boardData.check()) {
+      //     for (let piece of boardData.pieces) {
+      //       pieceNew= new state(piece, newLocation)
+      //     }
+      //     let image = pieceNew.getCell().firstChild;
+      //     newLocation.removeChild(image);
+      //     console.log(boardData.getPiece(pieceNew.piece.row, pieceNew.piece.col));
+      //     console.log("true")
+      //   }
     }
   }
+  const possibleMovesTDs = document.querySelectorAll('.possible-move, .selected')
+  possibleMovesTDs.forEach(el => el.classList.remove('possible-move', 'selected'))
+
+  // for (let i = 0; i < 8; i++) {
+  //   for (let j = 0; j < 8; j++) {
+  //     table.rows[i].cells[j].classList.remove('possible-move');
+  //     table.rows[i].cells[j].classList.remove('selected');
+  //   }
+  // }
 
   selectedCell = event.currentTarget;
   selectedCell.classList.add('selected');
@@ -363,8 +400,8 @@ function onCellClick(event, row, col) {
   // Show possible moves to the white player when it`s turn
 
   for (let piece of boardData.pieces) {
-    if (piece.row === row && piece.col === col) {
-      if (piece.player == WHITE_PLAYER && opponent) {
+    if (piece.row === row && piece.col === col && !piece.deleted) {
+      if (piece.player === WHITE_PLAYER && boardData.turn == WHITE_PLAYER) {
         pieceOld = new state(piece, selectedCell);
         let possibleMoves = piece.possibleMoves();
         for (let possibleMove of possibleMoves)
@@ -376,8 +413,8 @@ function onCellClick(event, row, col) {
   // Show possible moves to the black player when it`s turn
 
   for (let piece of boardData.pieces) {
-    if (piece.row === row && piece.col === col) {
-      if (piece.player == BLACK_PLAYER && !opponent) {
+    if (piece.row === row && piece.col === col && !piece.deleted) {
+      if (piece.player == BLACK_PLAYER && boardData.turn == BLACK_PLAYER) {
         pieceOld = new state(piece, selectedCell);
         let possibleMoves = piece.possibleMoves();
         for (let possibleMove of possibleMoves)
@@ -385,6 +422,7 @@ function onCellClick(event, row, col) {
       }
     }
   }
+
 }
 
 
@@ -459,9 +497,9 @@ function createChessBoard() {
   // add pieces to the board
   boardData = new BoardData(piecesOnBoard());
 
-  for (let piece of boardData.pieces) {
-    addImage(table.rows[piece.row].cells[piece.col], piece.player, piece.type);
-  }
+  // for (let piece of boardData.pieces) {
+  //   addImage(table.rows[piece.row].cells[piece.col], piece.player, piece.type);
+  // }
 
 }
 
