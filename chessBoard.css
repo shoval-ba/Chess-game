@@ -19,7 +19,7 @@
 }
 
 .blacksquare {
-    background-color: rgb(69, 150, 150);
+    background-color: rgb(80, 114, 114);
 }
 
 .whitesquare {
@@ -33,7 +33,7 @@
 }
 
 .selected{
-    background-color: #a67f7e;
+    background-color: #c4a6a4;
 }
 
 .possible-move{

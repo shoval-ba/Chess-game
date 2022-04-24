@@ -14,7 +14,7 @@ let pieces = [];
 let table;
 let pieceOld = null;
 let cell;
-let opponent = true; // 1 for the white player 0 for the black player
+let opponent = true; // true for the white player false for the black player
 
 class state {
   constructor(piece, cell) {
@@ -346,14 +346,7 @@ function onCellClick(event, row, col) {
       boardData.getPiece(pieceOld.piece.row, pieceOld.piece.col).changeLocation(row, col);
       pieceOld = null;
       opponent = !opponent;
-
-
-      // if (table.rows[row].cells[col] === table.rows[piece.row].cells[piece.col]) {
-      //   otherCell = table.rows[piece.row].cells[piece.col];
-      //   table.rows[row].cells[col].removeChild(otherCell);
-      // }
     }
-
   }
 
   for (let i = 0; i < 8; i++) {
@@ -366,8 +359,6 @@ function onCellClick(event, row, col) {
   selectedCell = event.currentTarget;
   selectedCell.classList.add('selected');
 
-
-  
 
   // Show possible moves to the white player when it`s turn
 
