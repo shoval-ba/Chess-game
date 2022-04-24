@@ -14,7 +14,6 @@ let pieces = [];
 let table;
 let pieceOld = null;
 let cell;
-let opponent = true; // true for the white player false for the black player
 
 class state {
   constructor(piece, cell) {
@@ -44,17 +43,19 @@ class BoardData {
     return false;
   }
 
+  // Set location to the piece(on the click function) and delete the other piece if piece he eat him
   setLocation(row, col, piece) {
-    if (this.turn == piece.player) {
-      const isOccupied = this.getPiece(row, col)
-      if (isOccupied)
-        isOccupied.deletePiece()
-      piece.MoveLocation(row, col)
-      this.nextTurn()
+    if (this.turn === piece.player) {
+      const isOccupied = this.getPiece(row, col);
+      if (isOccupied){
+        isOccupied.deletePiece();
+      }
+      piece.MoveLocation(row, col);
+      this.nextTurn();
     }
-
   }
 
+  // To decide who`s turn
   nextTurn() {
     this.turn = this.turn == WHITE_PLAYER ? BLACK_PLAYER : WHITE_PLAYER
   }
@@ -71,34 +72,42 @@ class Piece {
     this.initializePiece()
   }
 
+   // Add the image of the piece
+   appendPiece() {
+    const cell = table.rows[this.row].cells[this.col];
+    cell.appendChild(this.image);
+  }
+
+  // Add pieces to the board
   initializePiece() {
     this.image = document.createElement('img');
     this.image.src = "images/" + this.player + "." + this.type + '.png';
     this.image.className = "pieces"
     this.appendPiece()
   }
-
-  appendPiece() {
-    const cell = table.rows[this.row].cells[this.col]
-    cell.appendChild(this.image);
-  }
-  MoveLocation(row, col) {
-    this.changeLocation(row, col)
-    this.appendPiece()
-  }
-
+ 
+  // Change the loction of the piece
   changeLocation(row, col) {
     this.row = row;
     this.col = col;
   }
-  deletePiece() {
-    this.image.remove()
-    this.deleted = true
-    this.row = -1
-    this.col = -1
+
+  // Change the loction and the image of the piece
+  MoveLocation(row, col) {
+    this.changeLocation(row, col);
+    this.appendPiece();
   }
 
-  // where the pieces can move
+  // Delete piece from the board
+  deletePiece() {
+    this.image.remove();
+    this.deleted = true;
+     this.row = -1;
+     this.col = -1;
+    
+  }
+
+  // Where the pieces can move
   possibleMoves() {
     let filteredMoves;
     if (this.type === PAWN) {
@@ -121,12 +130,18 @@ class Piece {
     return filteredMoves;
   }
 
-  // if the cell on the board
+  isKing(){
+    if(Piece.type===KING)
+      return true
+    else false
+  }
+
+  // If the cell on the board
   isExist(row, col) {
     return -1 < row && row < 8 && -1 < col && col < 8
   }
 
-  // if the player is black or white
+  // If the player is black or white
   isBlack(val = 0) {
     if (val) {
       return this.player.includes('black') ? val : -val
@@ -134,7 +149,7 @@ class Piece {
     return this.player.includes('black')
   }
 
-  //  where the pawn can move
+  // Where the pawn can move
   pawnMoves() {
     let moves = []
 
@@ -153,23 +168,27 @@ class Piece {
     // can i eat front left
 
     let locationOccupied = boardData.getPiece(row + this.isBlack(1), col - 1)
-    if (locationOccupied && locationOccupied.player !== this.player) {
-
+    if (locationOccupied && locationOccupied.player !== this.player/* && locationOccupied.type !== KING*/) {
       moves.push([row + this.isBlack(1), col - 1])
+      
+  
     }
 
     // can i eat front right
 
     locationOccupied = boardData.getPiece(row + this.isBlack(1), col + 1)
-    if (locationOccupied && locationOccupied.player !== this.player) {
+    if (locationOccupied && locationOccupied.player !== this.player/* && locationOccupied.type !== KING*/) {
       moves.push([row + this.isBlack(1), col + 1])
+      
+  
     }
 
+    
     return moves;
 
   }
 
-  //  where the rook can move
+  // Where the rook can move
   rookMoves() {
     let moves = [];
     let row = this.row
@@ -179,7 +198,7 @@ class Piece {
     // bottom
     for (let i = row + 1; i < 8; i++) {
       let isOccupied = boardData.getPiece(i, col)
-      if (!isOccupied || (this.player !== isOccupied.player)) {
+      if (!isOccupied || (this.player !== isOccupied.player /*&& isOccupied.type !== KING*/)) {
         moves.push([i, col])
         if (isOccupied) {
           break
@@ -190,7 +209,7 @@ class Piece {
     // top
     for (let i = row - 1; i > -1; i--) {
       let isOccupied = boardData.getPiece(i, col)
-      if (!isOccupied || (this.player !== isOccupied.player)) {
+      if (!isOccupied || (this.player !== isOccupied.player /*&& isOccupied.type !== KING*/)) {
         moves.push([i, col])
         if (isOccupied) {
           break
@@ -201,7 +220,7 @@ class Piece {
     // right
     for (let i = col + 1; i < 8; i++) {
       let isOccupied = boardData.getPiece(row, i)
-      if (!isOccupied || (this.player !== isOccupied.player)) {
+      if (!isOccupied || (this.player !== isOccupied.player /*&& isOccupied.type !== KING*/)) {
         moves.push([row, i])
         if (isOccupied) {
           break
@@ -212,7 +231,7 @@ class Piece {
     // left
     for (let i = col - 1; i > -1; i--) {
       let isOccupied = boardData.getPiece(row, i)
-      if (!isOccupied || (this.player !== isOccupied.player)) {
+      if (!isOccupied || (this.player !== isOccupied.player /*&& isOccupied.type !== KING*/)) {
         moves.push([row, i])
         if (isOccupied) {
           break
@@ -223,7 +242,7 @@ class Piece {
     return moves;
   }
 
-  //  where the king can move
+  // Where the king can move
   kingMoves() {
 
     let row = this.row;
@@ -252,7 +271,7 @@ class Piece {
     return moves;
   }
 
-  //  where the bishop can move
+  // Where the bishop can move
   bishopMoves() {
     let moves = [];
 
@@ -264,7 +283,7 @@ class Piece {
     // down and right
     for (let i = row + 1; i < 8; i++) {
       let isOccupied = boardData.getPiece(i, temp1)
-      if ((!isOccupied || (this.player !== isOccupied.player)) && temp1 < 8) {
+      if ((!isOccupied || (this.player !== isOccupied.player)) && temp1 < 8 /*&& isOccupied.type !== KING*/) {
         moves.push([i, temp1])
         if (isOccupied) {
           temp1 = 8;
@@ -274,7 +293,7 @@ class Piece {
 
       // down and left
       isOccupied = boardData.getPiece(i, temp2)
-      if ((!isOccupied || (this.player !== isOccupied.player)) && temp2 > -1) {
+      if ((!isOccupied || (this.player !== isOccupied.player)) && temp2 > -1 /*&& isOccupied.type !== KING*/) {
         moves.push([i, temp2])
         if (isOccupied) {
           temp2 = -1;
@@ -288,7 +307,7 @@ class Piece {
     temp2 = col - 1
     for (let i = row - 1; i > -1; i--) {
       let isOccupied = boardData.getPiece(i, temp1)
-      if ((!isOccupied || (this.player !== isOccupied.player)) && temp1 < 8) {
+      if ((!isOccupied || (this.player !== isOccupied.player)) && temp1 < 8 /*&& isOccupied.type !== KING*/) {
         moves.push([i, temp1])
         if (isOccupied) {
           temp1 = 8;
@@ -298,7 +317,7 @@ class Piece {
 
       // up and left
       isOccupied = boardData.getPiece(i, temp2)
-      if ((!isOccupied || (this.player !== isOccupied.player)) && temp2 > -1) {
+      if ((!isOccupied || (this.player !== isOccupied.player)) && temp2 > -1 /*&& isOccupied.type !== KING*/) {
         moves.push([i, temp2])
         if (isOccupied) {
           temp2 = -1;
@@ -311,7 +330,7 @@ class Piece {
     return moves;
   }
 
-  //  where the knight can move
+  // Where the knight can move
   knightMoves() {
     let row = this.row;
     let col = this.col;
@@ -331,7 +350,7 @@ class Piece {
       if (!this.isExist(move[0], move[1]))
         return false;
       let isOccupied = boardData.getPiece(move[0], move[1])
-      if (!isOccupied || (this.player !== isOccupied.player))
+      if (!isOccupied || (this.player !== isOccupied.player) /*&& isOccupied.type !== KING*/)
         return true;
       return false
     })
@@ -339,7 +358,7 @@ class Piece {
     return moves;
   }
 
-  //  where the queen can move
+  // Where the queen can move
   queenMoves() {
     let moves = [];
 
@@ -349,13 +368,12 @@ class Piece {
     return moves;
   }
 
-
 }
 
-// when you click on one piece
+// When you click on one piece
 function onCellClick(event, row, col) {
 
-  // move the pieces
+  // Move the pieces
   if (pieceOld != null) {
     let newLocation = event.currentTarget;
     if (newLocation.classList.contains('possible-move')) {
@@ -366,33 +384,28 @@ function onCellClick(event, row, col) {
         turn.textContent = "white turn";
 
       boardData.setLocation(row, col, pieceOld.piece)
-      //   let image = pieceOld.getCell().firstChild;
-      //   newLocation.appendChild(image);
-      //   boardData.getPiece(pieceOld.piece.row, pieceOld.piece.col).changeLocation(row, col);
+      let possibleMoves = pieceOld.piece.possibleMoves();
+      for(let possibleMove of possibleMoves){
+        console.log(possibleMove)
+        if(boardData.getPiece(possibleMove[0] , possibleMove[1]).type === KING){
+          console.log("check")
+          check.classList.remove("out")
+          check.classList.add("check");
+        }
+      }
       pieceOld = null;
-      //   opponent = !opponent;
-
-      //   if (boardData.check()) {
-      //     for (let piece of boardData.pieces) {
-      //       pieceNew= new state(piece, newLocation)
-      //     }
-      //     let image = pieceNew.getCell().firstChild;
-      //     newLocation.removeChild(image);
-      //     console.log(boardData.getPiece(pieceNew.piece.row, pieceNew.piece.col));
-      //     console.log("true")
-      //   }
     }
   }
-  const possibleMovesTDs = document.querySelectorAll('.possible-move, .selected')
-  possibleMovesTDs.forEach(el => el.classList.remove('possible-move', 'selected'))
 
-  // for (let i = 0; i < 8; i++) {
-  //   for (let j = 0; j < 8; j++) {
-  //     table.rows[i].cells[j].classList.remove('possible-move');
-  //     table.rows[i].cells[j].classList.remove('selected');
-  //   }
-  // }
+  // Delete the selected cell when you select another cell
+  for (let i = 0; i < 8; i++) {
+    for (let j = 0; j < 8; j++) {
+      table.rows[i].cells[j].classList.remove('possible-move');
+      table.rows[i].cells[j].classList.remove('selected');
+    }
+  }
 
+  // background to the selected cell
   selectedCell = event.currentTarget;
   selectedCell.classList.add('selected');
 
@@ -419,6 +432,9 @@ function onCellClick(event, row, col) {
         let possibleMoves = piece.possibleMoves();
         for (let possibleMove of possibleMoves)
           table.rows[possibleMove[0]].cells[possibleMove[1]].classList.add('possible-move');
+        //  if(possibleMove.type===KING){
+
+        //  }
       }
     }
   }
@@ -426,7 +442,7 @@ function onCellClick(event, row, col) {
 }
 
 
-// add the pieces
+// Add the pieces
 function piecesOnBoard() {
   let result = [];
   addPieces(result, 0, BLACK_PLAYER);
@@ -449,28 +465,39 @@ function addPieces(result, row, player) {
   result.push(new Piece(row, 7, ROOK, player))
 }
 
-function addImage(cell, player, type) {
-  const image = document.createElement('img');
-  image.src = "images/" + player + "." + type + '.png';
-  image.className = "pieces"
-  cell.appendChild(image);
-}
 
-// create chess board html
+// Create chess board html
 function createChessBoard() {
-  // create background
+  // Create background
   background = document.createElement('div');
   document.body.appendChild(background);
   background.classList.add("background")
 
-  // create a title
+  // deletedWhite = document.createElement('div');
+  // textNode = document.createTextNode("white pieces eaten");
+  // deletedWhite.appendChild(textNode)
+  // document.body.appendChild(deletedWhite);
+  // deletedWhite.classList.add("deletedWhite")
+
+  // deletedBlack = document.createElement('div');
+  // document.body.appendChild(deletedBlack);
+  // deletedBlack.classList.add("deletedBlack")
+
+  // Create if check
+  check = document.createElement('H1');
+  textNodeCheck = document.createTextNode("Check");
+  check.appendChild(textNodeCheck)
+  background.appendChild(check);
+  check.classList.add("out");
+
+  // Create a title
   heading = document.createElement('H1');
   textNode = document.createTextNode("Chess game");
   heading.appendChild(textNode)
   background.appendChild(heading);
-  heading.classList.add("h1")
+  heading.classList.add("h1");
 
-  // create white turn/black turn
+  // Create white turn/black turn
   turn = document.createElement('H1');
   textNodeTurn = document.createTextNode("white turn");
   turn.appendChild(textNodeTurn)
@@ -494,14 +521,10 @@ function createChessBoard() {
     }
   }
 
-  // add pieces to the board
+  // Add pieces to the board
   boardData = new BoardData(piecesOnBoard());
-
-  // for (let piece of boardData.pieces) {
-  //   addImage(table.rows[piece.row].cells[piece.col], piece.player, piece.type);
-  // }
 
 }
 
-// call the function who crate the board
+// Call the function who crate the board
 window.addEventListener('load', createChessBoard);
