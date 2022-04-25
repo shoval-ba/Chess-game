@@ -14,6 +14,7 @@ let pieces = [];
 let table;
 let pieceOld = null;
 let cell;
+let deletedWhite;
 
 class state {
   constructor(piece, cell) {
@@ -72,7 +73,7 @@ class Piece {
     this.initializePiece()
   }
 
-   // Add the image of the piece
+   // Add the image on the piece
    appendPiece() {
     const cell = table.rows[this.row].cells[this.col];
     cell.appendChild(this.image);
@@ -100,7 +101,27 @@ class Piece {
 
   // Delete piece from the board
   deletePiece() {
-    this.image.remove();
+    // this.image.classList.remove("pieces");
+
+    // const cell = table.rows[this.row].cells[this.col];
+    // cell.removeChild(this.image);
+
+    if(this.player === WHITE_PLAYER){
+      
+      console.log("white")
+      deletedWhite.classList.remove("out")
+      deletedWhite.classList.add("deletedWhite") 
+      deletedWhite.appendChild(this.image);
+    }
+
+    if(this.player === BLACK_PLAYER){
+      deletedBlack.appendChild(this.image);
+      console.log("black")
+      deletedBlack.classList.remove("out")
+      deletedBlack.classList.add("deletedBlack")  
+    }
+
+    // this.image.remove();
     this.deleted = true;
      this.row = -1;
      this.col = -1;
@@ -384,13 +405,15 @@ function onCellClick(event, row, col) {
         turn.textContent = "white turn";
 
       boardData.setLocation(row, col, pieceOld.piece)
-      let possibleMoves = pieceOld.piece.possibleMoves();
-      for(let possibleMove of possibleMoves){
-        console.log(possibleMove)
-        if(boardData.getPiece(possibleMove[0] , possibleMove[1]).type === KING){
-          console.log("check")
-          check.classList.remove("out")
-          check.classList.add("check");
+      
+      for (let piece of boardData.pieces) {
+        let possibleMoves = piece.possibleMoves();
+        for(let possibleMove of possibleMoves){
+          console.log(possibleMove)
+          if(boardData.getPiece(possibleMove[0] , possibleMove[1]).type === KING){
+            check.classList.remove("out")
+            check.classList.add("check");
+          }
         }
       }
       pieceOld = null;
@@ -409,6 +432,9 @@ function onCellClick(event, row, col) {
   selectedCell = event.currentTarget;
   selectedCell.classList.add('selected');
 
+  // if(check.classList.contains("check")){
+
+  // }
 
   // Show possible moves to the white player when it`s turn
 
@@ -473,15 +499,13 @@ function createChessBoard() {
   document.body.appendChild(background);
   background.classList.add("background")
 
-  // deletedWhite = document.createElement('div');
-  // textNode = document.createTextNode("white pieces eaten");
-  // deletedWhite.appendChild(textNode)
-  // document.body.appendChild(deletedWhite);
-  // deletedWhite.classList.add("deletedWhite")
+  deletedWhite = document.createElement('div');
+  document.body.appendChild(deletedWhite);
+  deletedWhite.classList.add("out")
 
-  // deletedBlack = document.createElement('div');
-  // document.body.appendChild(deletedBlack);
-  // deletedBlack.classList.add("deletedBlack")
+  deletedBlack = document.createElement('div');
+  document.body.appendChild(deletedBlack);
+  deletedBlack.classList.add("out")
 
   // Create if check
   check = document.createElement('H1');
