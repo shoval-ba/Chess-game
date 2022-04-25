@@ -15,6 +15,7 @@ let table;
 let pieceOld = null;
 let cell;
 let deletedWhite;
+let isThreat = false;
 
 class state {
   constructor(piece, cell) {
@@ -59,6 +60,24 @@ class BoardData {
   // To decide who`s turn
   nextTurn() {
     this.turn = this.turn == WHITE_PLAYER ? BLACK_PLAYER : WHITE_PLAYER
+  }
+
+  isThreat(){
+    for (let piece of this.pieces) {
+      let possibleMoves = piece.possibleMoves();
+      for(let possibleMove of possibleMoves){
+        // console.log(possibleMove)
+        if(this.getPiece(possibleMove[0] , possibleMove[1]).type === KING){
+          check.classList.remove("out");
+          check.classList.add("check");
+          console.log("is threat");
+          isThreat= true;
+        }
+      }
+    }
+    check.classList.remove("check");
+    check.classList.add("out");
+    return isThreat
   }
 }
 
@@ -106,26 +125,37 @@ class Piece {
     // const cell = table.rows[this.row].cells[this.col];
     // cell.removeChild(this.image);
 
-    if(this.player === WHITE_PLAYER){
+    // if(this.player === WHITE_PLAYER){
       
-      console.log("white")
-      deletedWhite.classList.remove("out")
-      deletedWhite.classList.add("deletedWhite") 
-      deletedWhite.appendChild(this.image);
-    }
+    //   console.log("white")
+    //   deletedWhite.classList.remove("out")
+    //   deletedWhite.classList.add("deletedWhite") 
+    //   deletedWhite.appendChild(this.image);
+    // }
 
-    if(this.player === BLACK_PLAYER){
-      deletedBlack.appendChild(this.image);
-      console.log("black")
-      deletedBlack.classList.remove("out")
-      deletedBlack.classList.add("deletedBlack")  
-    }
+    // if(this.player === BLACK_PLAYER){
+    //   deletedBlack.appendChild(this.image);
+    //   console.log("black")
+    //   deletedBlack.classList.remove("out")
+    //   deletedBlack.classList.add("deletedBlack")  
+    // }
 
-    // this.image.remove();
+    this.image.remove();
     this.deleted = true;
-     this.row = -1;
-     this.col = -1;
+    this.row = -1;
+    this.col = -1;
     
+  }
+
+  changePawnToQueen(){
+    if(this.type===PAWN){
+      if(this.player===WHITE_PLAYER && this.row===0){
+        this.type===QUEEN;
+      }
+      if(this.player===BLACK_PLAYER && this.row===7){
+        this.type===QUEEN;
+      }
+    }
   }
 
   // Where the pieces can move
@@ -133,7 +163,7 @@ class Piece {
     let filteredMoves;
     if (this.type === PAWN) {
       filteredMoves = this.pawnMoves(this.player);
-    } else if (this.type === ROOK) {
+    } else if (this.type === ROOK /*&& boardData.isThreat()===false*/) {
       filteredMoves = this.rookMoves();
     } else if (this.type === KNIGHT) {
       filteredMoves = this.knightMoves();
@@ -145,7 +175,7 @@ class Piece {
       filteredMoves = this.queenMoves();
     }
     else {
-      consoloe.log("Unknown type , type")
+      console.log("Unknown type");
     }
 
     return filteredMoves;
@@ -176,35 +206,34 @@ class Piece {
 
     let col = this.col
     let row = this.row
+    if(isThreat === false){
+      if ((this.isBlack() ? row + 1 < 8 : row - 1 > 0) && !boardData.getPiece(row + this.isBlack(1), col)) {
+        moves.push([row + this.isBlack(1), col])
+      }
 
-    if ((this.isBlack() ? row + 1 < 8 : row - 1 > 0) && !boardData.getPiece(row + this.isBlack(1), col)) {
-      moves.push([row + this.isBlack(1), col])
-    }
-
-    if ((this.isBlack() ? row === 1 : row === 6) && !boardData.getPiece(row + this.isBlack(1), col) && !boardData.getPiece(row + this.isBlack(2), col)) {
-      moves.push([row + this.isBlack(2), col])
-    }
+      if ((this.isBlack() ? row === 1 : row === 6) && !boardData.getPiece(row + this.isBlack(1), col) && !boardData.getPiece(row + this.isBlack(2), col)) {
+        moves.push([row + this.isBlack(2), col])
+      }
 
 
-    // can i eat front left
+      // can i eat front left
 
-    let locationOccupied = boardData.getPiece(row + this.isBlack(1), col - 1)
-    if (locationOccupied && locationOccupied.player !== this.player/* && locationOccupied.type !== KING*/) {
-      moves.push([row + this.isBlack(1), col - 1])
-      
-  
-    }
-
-    // can i eat front right
-
-    locationOccupied = boardData.getPiece(row + this.isBlack(1), col + 1)
-    if (locationOccupied && locationOccupied.player !== this.player/* && locationOccupied.type !== KING*/) {
-      moves.push([row + this.isBlack(1), col + 1])
-      
-  
-    }
-
+      let locationOccupied = boardData.getPiece(row + this.isBlack(1), col - 1)
+      if (locationOccupied && locationOccupied.player !== this.player/* && locationOccupied.type !== KING*/) {
+        moves.push([row + this.isBlack(1), col - 1])
+        
     
+      }
+
+      // can i eat front right
+
+      locationOccupied = boardData.getPiece(row + this.isBlack(1), col + 1)
+      if (locationOccupied && locationOccupied.player !== this.player/* && locationOccupied.type !== KING*/) {
+        moves.push([row + this.isBlack(1), col + 1])
+        
+      }
+    }
+
     return moves;
 
   }
@@ -215,51 +244,51 @@ class Piece {
     let row = this.row
     let col = this.col
 
+    // if(boardData.isThreat()===false){
+      // bottom
+      for (let i = row + 1; i < 8; i++) {
+        let isOccupied = boardData.getPiece(i, col)
+        if (!isOccupied || (this.player !== isOccupied.player /*&& isOccupied.type !== KING*/)) {
+          moves.push([i, col])
+          if (isOccupied) {
+            break
+          }
+        } else break
+      }
 
-    // bottom
-    for (let i = row + 1; i < 8; i++) {
-      let isOccupied = boardData.getPiece(i, col)
-      if (!isOccupied || (this.player !== isOccupied.player /*&& isOccupied.type !== KING*/)) {
-        moves.push([i, col])
-        if (isOccupied) {
-          break
-        }
-      } else break
-    }
+      // top
+      for (let i = row - 1; i > -1; i--) {
+        let isOccupied = boardData.getPiece(i, col)
+        if (!isOccupied || (this.player !== isOccupied.player /*&& isOccupied.type !== KING*/)) {
+          moves.push([i, col])
+          if (isOccupied) {
+            break
+          }
+        } else break
+      }
 
-    // top
-    for (let i = row - 1; i > -1; i--) {
-      let isOccupied = boardData.getPiece(i, col)
-      if (!isOccupied || (this.player !== isOccupied.player /*&& isOccupied.type !== KING*/)) {
-        moves.push([i, col])
-        if (isOccupied) {
-          break
-        }
-      } else break
-    }
+      // right
+      for (let i = col + 1; i < 8; i++) {
+        let isOccupied = boardData.getPiece(row, i)
+        if (!isOccupied || (this.player !== isOccupied.player /*&& isOccupied.type !== KING*/)) {
+          moves.push([row, i])
+          if (isOccupied) {
+            break
+          }
+        } else break
+      }
 
-    // right
-    for (let i = col + 1; i < 8; i++) {
-      let isOccupied = boardData.getPiece(row, i)
-      if (!isOccupied || (this.player !== isOccupied.player /*&& isOccupied.type !== KING*/)) {
-        moves.push([row, i])
-        if (isOccupied) {
-          break
-        }
-      } else break
-    }
-
-    // left
-    for (let i = col - 1; i > -1; i--) {
-      let isOccupied = boardData.getPiece(row, i)
-      if (!isOccupied || (this.player !== isOccupied.player /*&& isOccupied.type !== KING*/)) {
-        moves.push([row, i])
-        if (isOccupied) {
-          break
-        }
-      } else break
-    }
-
+      // left
+      for (let i = col - 1; i > -1; i--) {
+        let isOccupied = boardData.getPiece(row, i)
+        if (!isOccupied || (this.player !== isOccupied.player /*&& isOccupied.type !== KING*/)) {
+          moves.push([row, i])
+          if (isOccupied) {
+            break
+          }
+        } else break
+      }
+    // }
     return moves;
   }
 
@@ -394,6 +423,7 @@ class Piece {
 // When you click on one piece
 function onCellClick(event, row, col) {
 
+  
   // Move the pieces
   if (pieceOld != null) {
     let newLocation = event.currentTarget;
@@ -406,17 +436,20 @@ function onCellClick(event, row, col) {
 
       boardData.setLocation(row, col, pieceOld.piece)
       
-      for (let piece of boardData.pieces) {
-        let possibleMoves = piece.possibleMoves();
-        for(let possibleMove of possibleMoves){
-          console.log(possibleMove)
-          if(boardData.getPiece(possibleMove[0] , possibleMove[1]).type === KING){
-            check.classList.remove("out")
-            check.classList.add("check");
-          }
-        }
+      boardData.isThreat()
+      
+      if(isThreat===false){
+        console.log("no thraet")
+        check.classList.remove("check")
+        check.classList.add("out");
+      }
+      if(isThreat===true){
+        console.log("yes threat")
+        check.classList.remove("out");
+        check.classList.add("check");
       }
       pieceOld = null;
+      isThreat=false 
     }
   }
 
@@ -432,9 +465,6 @@ function onCellClick(event, row, col) {
   selectedCell = event.currentTarget;
   selectedCell.classList.add('selected');
 
-  // if(check.classList.contains("check")){
-
-  // }
 
   // Show possible moves to the white player when it`s turn
 
@@ -458,13 +488,10 @@ function onCellClick(event, row, col) {
         let possibleMoves = piece.possibleMoves();
         for (let possibleMove of possibleMoves)
           table.rows[possibleMove[0]].cells[possibleMove[1]].classList.add('possible-move');
-        //  if(possibleMove.type===KING){
-
-        //  }
       }
     }
   }
-
+  
 }
 
 
@@ -542,12 +569,13 @@ function createChessBoard() {
         cell.className = "square whitesquare";
       }
       cell.addEventListener('click', (event) => onCellClick(event, row, col));
+      
     }
   }
 
   // Add pieces to the board
   boardData = new BoardData(piecesOnBoard());
-
+  
 }
 
 // Call the function who crate the board
