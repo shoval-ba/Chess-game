@@ -4,7 +4,7 @@
  }
 
 .table1{
-    position: relative;
+    position: absolute;
     top:15%;
     left:25%;
     border: 0.5px solid rgb(124, 120, 120);
@@ -58,7 +58,6 @@
 
 .background{
     position: relative;
-    top:3%;
     left:14.5%;
     width: 1700px;
     height: 1200px;
