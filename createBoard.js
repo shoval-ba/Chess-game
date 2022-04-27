@@ -68,7 +68,7 @@ function createChessBoard() {
   blackPlayer = document.createElement('div');
   textNodeBlack = document.createTextNode("Black player");
   blackPlayer.appendChild(textNodeBlack)
-  document.body.appendChild(blackPlayer);
+  background.appendChild(blackPlayer);
   blackPlayer.classList.add("blackPlayer")
 
   // Black eat
@@ -93,7 +93,7 @@ function createChessBoard() {
 
   table = document.createElement('table');
   table.className = "table1"
-  document.body.appendChild(table);
+  background.appendChild(table);
   for (let row = 0; row < BOARD_SIZE; row++) {
     const rowElement = table.insertRow();
     for (let col = 0; col < BOARD_SIZE; col++) {
@@ -111,6 +111,7 @@ function createChessBoard() {
       check.appendChild(textNodeCheck)
       table.appendChild(check);
       check.classList.add("out");
+
     }
   }
 

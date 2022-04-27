@@ -39,7 +39,6 @@ class BoardData {
           if (this.getPiece(possibleMove[0], possibleMove[1]).type === KING) {
             check.classList.remove("out");
             check.classList.add("check");
-            console.log("is threat");
             isThreat = true;
           }
           // else
@@ -48,7 +47,6 @@ class BoardData {
       }
       check.classList.remove("check");
       check.classList.add("out");
-      console.log(isThreat)
       return isThreat
     }
   

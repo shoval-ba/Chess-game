@@ -4,12 +4,28 @@
  }
 
 .table1{
-    position: absolute;
+    position: relative;
     top:15%;
-    left:32%;
-     border: 0.5px solid rgb(124, 120, 120);
+    left:25%;
+    border: 0.5px solid rgb(124, 120, 120);
     border-style: inset; 
 
+}
+
+.numbers{
+    position: absolute;
+    top:14%;
+    left:31%;
+    font-size: 31.5px;
+    max-width: 20px;
+}
+
+.letters{
+    position: absolute;
+    top:75%;
+    left:34%;
+    font-size: 31.5px;
+    word-spacing: 82px;
 }
 
 .square {
@@ -41,7 +57,7 @@
 }
 
 .background{
-    position: absolute;
+    position: relative;
     top:3%;
     left:14.5%;
     width: 1700px;
@@ -51,9 +67,9 @@
 
 .h1{
     position: absolute;
-    top:-1%;
-    left:38%;
-    font-size: 60px;
+    top:-2%;
+    left:37%;
+    font-size: 70px;
     font-family: 'Courier New', Courier, monospace;
     color: rgb(82, 66, 46);
 }
@@ -69,15 +85,14 @@
     position: absolute;
     top:15%;
     left:6%;
-
     font-size: 40px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .blackPlayer{
     position: absolute;
-    top:16%;
-    left:72%;
+    top:15%;
+    left:80%;
     font-size: 40px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }

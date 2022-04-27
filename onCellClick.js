@@ -65,6 +65,7 @@ function onCellClick(event, row, col) {
         if (piece.player == BLACK_PLAYER && boardData.turn == BLACK_PLAYER) {
           pieceOld = new state(piece, selectedCell);
           let possibleMoves = piece.possibleMoves();
+          boardData.checkIfCanMove(pieceOld)
           for (let possibleMove of possibleMoves)
             table.rows[possibleMove[0]].cells[possibleMove[1]].classList.add('possible-move');
         }
