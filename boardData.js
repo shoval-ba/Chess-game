@@ -31,6 +31,7 @@ class BoardData {
       this.turn = this.turn == WHITE_PLAYER ? BLACK_PLAYER : WHITE_PLAYER
     }
   
+    // If the king is threat
     isThreat() {
       for (let piece of this.pieces) {
         let possibleMoves = piece.possibleMoves();
@@ -51,6 +52,7 @@ class BoardData {
       return isThreat
     }
   
+    // Check if i can move when the king is threat
     checkIfCanMove(piece) {
   
       let possibleMoves = piece.piece.possibleMoves();

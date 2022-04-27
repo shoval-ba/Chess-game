@@ -11,8 +11,6 @@ class state {
   }
   
   
-  
-  
   class Piece {
     constructor(row, col, type, player) {
       this.row = row;
@@ -53,28 +51,22 @@ class state {
     deletePiece() {
       // this.image.classList.remove("pieces");
   
-      // if(this.player === WHITE_PLAYER){
+      if(this.player === WHITE_PLAYER){
+        deletedWhite.appendChild(this.image);
+      }
   
-      //   console.log("white")
-      //   deletedWhite.classList.remove("out")
-      //   deletedWhite.classList.add("deletedWhite") 
-      //   deletedWhite.appendChild(this.image);
-      // }
+      if(this.player === BLACK_PLAYER){
+        deletedBlack.appendChild(this.image); 
+      }
   
-      // if(this.player === BLACK_PLAYER){
-      //   deletedBlack.appendChild(this.image);
-      //   console.log("black")
-      //   deletedBlack.classList.remove("out")
-      //   deletedBlack.classList.add("deletedBlack")  
-      // }
-  
-      this.image.remove();
+      // this.image.remove();
       this.deleted = true;
       this.row = -1;
       this.col = -1;
   
     }
   
+    // When pawn get to the end
     changePawnToQueen() {
       if (this.type === PAWN) {
         if (this.player === WHITE_PLAYER && this.row === 0) {
@@ -150,8 +142,6 @@ class state {
       let locationOccupied = boardData.getPiece(row + this.isBlack(1), col - 1)
       if (locationOccupied && locationOccupied.player !== this.player/* && locationOccupied.type !== KING*/) {
         moves.push([row + this.isBlack(1), col - 1])
-  
-  
       }
   
       // can i eat front right
@@ -159,7 +149,6 @@ class state {
       locationOccupied = boardData.getPiece(row + this.isBlack(1), col + 1)
       if (locationOccupied && locationOccupied.player !== this.player/* && locationOccupied.type !== KING*/) {
         moves.push([row + this.isBlack(1), col + 1])
-  
       }
       return moves;
   

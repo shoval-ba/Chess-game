@@ -43,7 +43,7 @@
 .background{
     position: absolute;
     top:3%;
-    left:15%;
+    left:14.5%;
     width: 1700px;
     height: 1200px;
     background-color: rgba(174, 202, 218 , 0.5);
@@ -65,22 +65,43 @@
 }
 
 
+.whitePlayer{
+    position: absolute;
+    top:15%;
+    left:6%;
+
+    font-size: 40px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.blackPlayer{
+    position: absolute;
+    top:16%;
+    left:72%;
+    font-size: 40px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
 .deletedWhite{
     position: absolute;
-    top:7.5%;
-    left:-25%;
+    top:130%;
+    left:-2%;
+    max-width: 300px;
 }
 
 .deletedBlack{
     position: absolute;
-    top:7.5%;
-    left:120%;
+    top:130%;
+    left:-2%;
+    max-width: 500px;
 }
 
 .check{
     position: absolute;
-    top:45%;
-    left:85%;
+    top:42%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    font-size: 60px;
 }
 
 .out{

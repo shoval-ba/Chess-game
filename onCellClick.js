@@ -32,8 +32,6 @@ function onCellClick(event, row, col) {
       isThreat = false
     }
   
-    // 
-  
     // Delete the selected cell when you select another cell
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
