@@ -1,7 +1,7 @@
 class BoardData {
   constructor(pieces) {
     this.pieces = pieces;
-    this.turn = WHITE_PLAYER
+    this.turn = WHITE_PLAYER;
     this.opppentPosibleMove = [];
   }
 
@@ -29,7 +29,7 @@ class BoardData {
 
   // To decide who`s turn
   nextTurn() {
-    this.turn = this.turn == WHITE_PLAYER ? BLACK_PLAYER : WHITE_PLAYER
+    this.turn = this.turn == WHITE_PLAYER ? BLACK_PLAYER : WHITE_PLAYER;
 
   }
 
@@ -38,16 +38,12 @@ class BoardData {
     for (let piece of this.pieces) {
       let possibleMoves = piece.possibleMoves();
       for (let possibleMove of possibleMoves) {
-        const curPiece = this.getPiece(possibleMove[0], possibleMove[1])
+        const curPiece = this.getPiece(possibleMove[0], possibleMove[1]);
         if (curPiece.type === KING) {
           check.classList.remove("out");
           check.classList.add("check");
           isThreat = true;
-          pieceThreat = piece;
-          console.log(pieceThreat.player)
-
         }
-
       }
     }
     check.classList.remove("check");
@@ -55,38 +51,27 @@ class BoardData {
     return isThreat
   }
 
-  // If the king is threat
+  // Who threat of the king 
   whosThreat() {
     for (let piece of this.pieces) {
       let possibleMoves = piece.possibleMoves();
-
       for (let possibleMove of possibleMoves) {
         const curPiece = this.getPiece(possibleMove[0], possibleMove[1])
         if (curPiece.type === KING) {
-          check.classList.remove("out");
-          check.classList.add("check");
-          isThreat = true;
           pieceThreat = piece;
-          console.log(pieceThreat.player)
-
         }
-
       }
     }
-    check.classList.remove("check");
-    check.classList.add("out");
     return pieceThreat;
   }
 
-  // Check if i can move when the king is threat
+  // Check if piece can move when the king is threat
   possibleMovesInCheck(piece) {
     let curPiece = this.whosThreat();
     let usedPiece = piece.piece;
     let possibleMoves = curPiece.possibleMoves();
     let moves = [];
-    let badMoves = [];
 
-    // create list of check moves
     for (let move of possibleMoves) {
       let row = curPiece.row;
       let col = curPiece.col;
@@ -104,7 +89,6 @@ class BoardData {
       }
     }
 
-    console.log('sholmi', moves)
     moves.push([curPiece.row, curPiece.col]);
     let possibleMovesOponent = [];
 
@@ -123,19 +107,18 @@ class BoardData {
         }
       }
     }
-    console.log('finel moves for check', checkMoves)
     return checkMoves;
   }
 
-  // Check if i can move when the king is threat
+  // Check if piece can move when the king is threat
   checkIfCanMove(piece, possibleMoves = []) {
-    let curPiece = piece.piece
+    let curPiece = piece.piece;
     let moves = possibleMoves.filter((move) => {
-      let row = curPiece.row
-      let col = curPiece.col
+      let row = curPiece.row;
+      let col = curPiece.col;
       curPiece.changeLocation(move.row, move.col)
-      let kingThreat = this.isThreat()
-      curPiece.changeLocation(row, col)
+      let kingThreat = this.isThreat();
+      curPiece.changeLocation(row, col);
       if (kingThreat === false) {
         return true;
       }
@@ -151,36 +134,6 @@ class BoardData {
     return moves
   }
 
-
 }
 
 
-
-// console.log('procecs restarted')
-//       curPiece.changeLocation(row, col)
-//       if (kingThreat === true) {
-//         let rowUse = usedPiece.row;
-//         let colUse = usedPiece.col;
-
-//         for (let moveUsedPiece of usedPiece.possibleMoves()) {
-//           if (moveUsedPiece[0] === move[0] && moveUsedPiece[1] === move[1]) {
-//             usedPiece.changeLocation(moveUsedPiece[0], moveUsedPiece[1])
-//           }
-
-//           console.log('used piece curerent locaqton', usedPiece)
-
-//           for (let movePiece of curPiece.possibleMoves()) {
-//             console.log('possible move for bishop', movePiece)
-//             if (this.getPiece(movePiece[0], movePiece[1]).type === KING) {
-//               kingThreats = true;
-//               console.log('ido', usedPiece)
-//             }
-//           }
-
-//           if (kingThreats === false) {
-//             moves.push([move[0], move[1]]);
-//           }
-
-//           usedPiece.changeLocation(rowUse, colUse)
-//         }
-//       // }

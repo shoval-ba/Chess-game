@@ -12,13 +12,12 @@ function onCellClick(event, row, col) {
       else
         turnText.textContent = "white turn";
 
-      boardData.setLocation(row, col, pieceOld.piece)
+      boardData.setLocation(row, col, pieceOld.piece);
 
-      isThreat = boardData.isThreat()
-
+      isThreat = boardData.isThreat();
 
       if (isThreat === false) {
-        check.classList.remove("check")
+        check.classList.remove("check");
         check.classList.add("out");
       }
       if (isThreat === true) {
@@ -28,7 +27,6 @@ function onCellClick(event, row, col) {
       }
     }
     pieceOld = null;
-    // isThreat = false
   }
 
   // Delete the selected cell when you select another cell
@@ -54,7 +52,10 @@ function onCellClick(event, row, col) {
         }
         else {
           possibleMoves = boardData.checkIfCanMove(pieceOld, possibleMoves)
-          console.log(possibleMoves)
+        }
+        if (possibleMoves === []) {
+          checkMateBlack.classList.remove("out");
+          checkMateBlack.classList.add("checkMate");
         }
         isThreat = false
         for (let possibleMove of possibleMoves) {
@@ -77,14 +78,17 @@ function onCellClick(event, row, col) {
         else {
           possibleMoves = boardData.checkIfCanMove(pieceOld, possibleMoves)
         }
+        if (possibleMoves === []) {
+          checkMateWhite.classList.remove("out");
+          checkMateWhite.classList.add("checkMate");
+        }
         isThreat = false
         for (let possibleMove of possibleMoves) {
           table.rows[possibleMove[0]].cells[possibleMove[1]].classList.add('possible-move');
         }
       }
-
     }
   }
-  // boardData.checkPossibleMoveOf()
+
 }
 

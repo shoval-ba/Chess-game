@@ -17,8 +17,8 @@ class Piece {
     this.col = col;
     this.type = type;
     this.player = player;
-    this.deleted = false
-    this.initializePiece()
+    this.deleted = false;
+    this.initializePiece();
   }
 
   // Add the image on the piece
@@ -31,8 +31,8 @@ class Piece {
   initializePiece() {
     this.image = document.createElement('img');
     this.image.src = "images/" + this.player + "." + this.type + '.png';
-    this.image.className = "pieces"
-    this.appendPiece()
+    this.image.className = "pieces";
+    this.appendPiece();
   }
 
   // Change the loction of the piece
@@ -72,7 +72,7 @@ class Piece {
       if (this.player === WHITE_PLAYER && this.row === 0) {
 
         this.type = QUEEN;
-        this.appendChild(this.img)
+        this.appendChild(this.img);
       }
       if (this.player === BLACK_PLAYER && this.row === 7) {
         this.type = QUEEN;
@@ -128,30 +128,30 @@ class Piece {
   pawnMoves() {
     let moves = []
 
-    let col = this.col
-    let row = this.row
+    let col = this.col;
+    let row = this.row;
 
     if ((this.isBlack() ? row + 1 < 8 : row - 1 > 0) && !boardData.getPiece(row + this.isBlack(1), col)) {
-      moves.push([row + this.isBlack(1), col])
+      moves.push([row + this.isBlack(1), col]);
     }
 
     if ((this.isBlack() ? row === 1 : row === 6) && !boardData.getPiece(row + this.isBlack(1), col) && !boardData.getPiece(row + this.isBlack(2), col)) {
-      moves.push([row + this.isBlack(2), col])
+      moves.push([row + this.isBlack(2), col]);
     }
 
 
     // can i eat front left
 
-    let locationOccupied = boardData.getPiece(row + this.isBlack(1), col - 1)
+    let locationOccupied = boardData.getPiece(row + this.isBlack(1), col - 1);
     if (locationOccupied && locationOccupied.player !== this.player/* && locationOccupied.type !== KING*/) {
-      moves.push([row + this.isBlack(1), col - 1])
+      moves.push([row + this.isBlack(1), col - 1]);
     }
 
     // can i eat front right
 
-    locationOccupied = boardData.getPiece(row + this.isBlack(1), col + 1)
+    locationOccupied = boardData.getPiece(row + this.isBlack(1), col + 1);
     if (locationOccupied && locationOccupied.player !== this.player/* && locationOccupied.type !== KING*/) {
-      moves.push([row + this.isBlack(1), col + 1])
+      moves.push([row + this.isBlack(1), col + 1]);
     }
     return moves;
 
@@ -160,15 +160,15 @@ class Piece {
   // Where the rook can move
   rookMoves() {
     let moves = [];
-    let row = this.row
-    let col = this.col
+    let row = this.row;
+    let col = this.col;
 
     // if(boardData.isThreat()===false){
     // bottom
     for (let i = row + 1; i < 8; i++) {
-      let isOccupied = boardData.getPiece(i, col)
-      if (!isOccupied || (this.player !== isOccupied.player /*&& isOccupied.type !== KING*/)) {
-        moves.push([i, col])
+      let isOccupied = boardData.getPiece(i, col);
+      if (!isOccupied || (this.player !== isOccupied.player)) {
+        moves.push([i, col]);
         if (isOccupied) {
           break
         }
@@ -177,9 +177,9 @@ class Piece {
 
     // top
     for (let i = row - 1; i > -1; i--) {
-      let isOccupied = boardData.getPiece(i, col)
-      if (!isOccupied || (this.player !== isOccupied.player /*&& isOccupied.type !== KING*/)) {
-        moves.push([i, col])
+      let isOccupied = boardData.getPiece(i, col);
+      if (!isOccupied || (this.player !== isOccupied.player)) {
+        moves.push([i, col]);;
         if (isOccupied) {
           break
         }
@@ -188,9 +188,9 @@ class Piece {
 
     // right
     for (let i = col + 1; i < 8; i++) {
-      let isOccupied = boardData.getPiece(row, i)
-      if (!isOccupied || (this.player !== isOccupied.player /*&& isOccupied.type !== KING*/)) {
-        moves.push([row, i])
+      let isOccupied = boardData.getPiece(row, i);
+      if (!isOccupied || (this.player !== isOccupied.player)) {
+        moves.push([row, i]);
         if (isOccupied) {
           break
         }
@@ -199,9 +199,9 @@ class Piece {
 
     // left
     for (let i = col - 1; i > -1; i--) {
-      let isOccupied = boardData.getPiece(row, i)
-      if (!isOccupied || (this.player !== isOccupied.player /*&& isOccupied.type !== KING*/)) {
-        moves.push([row, i])
+      let isOccupied = boardData.getPiece(row, i);
+      if (!isOccupied || (this.player !== isOccupied.player)) {
+        moves.push([row, i]);
         if (isOccupied) {
           break
         }
@@ -231,10 +231,10 @@ class Piece {
     moves = moves.filter((move) => {
       if (!this.isExist(move[0], move[1]))
         return false;
-      let isOccupied = boardData.getPiece(move[0], move[1])
+      let isOccupied = boardData.getPiece(move[0], move[1]);
       if (!isOccupied || (this.player !== isOccupied.player))
         return true;
-      return false
+      return false;
     })
 
     return moves;
@@ -251,9 +251,9 @@ class Piece {
 
     // down and right
     for (let i = row + 1; i < 8; i++) {
-      let isOccupied = boardData.getPiece(i, temp1)
-      if ((!isOccupied || (this.player !== isOccupied.player)) && temp1 < 8 /*&& isOccupied.type !== KING*/) {
-        moves.push([i, temp1])
+      let isOccupied = boardData.getPiece(i, temp1);
+      if ((!isOccupied || (this.player !== isOccupied.player)) && temp1 < 8) {
+        moves.push([i, temp1]);
         if (isOccupied) {
           temp1 = 8;
         }
@@ -261,9 +261,9 @@ class Piece {
       temp1++
 
       // down and left
-      isOccupied = boardData.getPiece(i, temp2)
-      if ((!isOccupied || (this.player !== isOccupied.player)) && temp2 > -1 /*&& isOccupied.type !== KING*/) {
-        moves.push([i, temp2])
+      isOccupied = boardData.getPiece(i, temp2);
+      if ((!isOccupied || (this.player !== isOccupied.player)) && temp2 > -1) {
+        moves.push([i, temp2]);
         if (isOccupied) {
           temp2 = -1;
         }
@@ -272,12 +272,12 @@ class Piece {
     }
 
     // up and right
-    temp1 = col + 1
-    temp2 = col - 1
+    temp1 = col + 1;
+    temp2 = col - 1;
     for (let i = row - 1; i > -1; i--) {
-      let isOccupied = boardData.getPiece(i, temp1)
-      if ((!isOccupied || (this.player !== isOccupied.player)) && temp1 < 8 /*&& isOccupied.type !== KING*/) {
-        moves.push([i, temp1])
+      let isOccupied = boardData.getPiece(i, temp1);
+      if ((!isOccupied || (this.player !== isOccupied.player)) && temp1 < 8) {
+        moves.push([i, temp1]);
         if (isOccupied) {
           temp1 = 8;
         }
@@ -285,9 +285,9 @@ class Piece {
       temp1++
 
       // up and left
-      isOccupied = boardData.getPiece(i, temp2)
-      if ((!isOccupied || (this.player !== isOccupied.player)) && temp2 > -1 /*&& isOccupied.type !== KING*/) {
-        moves.push([i, temp2])
+      isOccupied = boardData.getPiece(i, temp2);
+      if ((!isOccupied || (this.player !== isOccupied.player)) && temp2 > -1) {
+        moves.push([i, temp2]);
         if (isOccupied) {
           temp2 = -1;
         }
@@ -318,10 +318,10 @@ class Piece {
     moves = moves.filter((move) => {
       if (!this.isExist(move[0], move[1]))
         return false;
-      let isOccupied = boardData.getPiece(move[0], move[1])
-      if (!isOccupied || (this.player !== isOccupied.player) /*&& isOccupied.type !== KING*/)
+      let isOccupied = boardData.getPiece(move[0], move[1]);
+      if (!isOccupied || (this.player !== isOccupied.player))
         return true;
-      return false
+      return false;
     })
 
     return moves;

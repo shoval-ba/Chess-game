@@ -14,37 +14,10 @@ let pieces = [];
 let table;
 let pieceOld = null;
 let cell;
-let deletedWhite;
 let isThreat = false;
 let pieceNew;
 let filteredMoves;
-let canMove;
 let pieceThreat;
-
-
-function sameValueBet2arr(arr1, arr2) {
-  let arrBig, arrSmall;
-
-  if (arr1.length > arr2.length) {
-    arrBig = arr1;
-    arrSmall = arr2
-  }
-  else {
-    arrBig = arr2;
-    arrSmall = arr1
-
-  }
-  let sameValues = [];
-  arrSmall.forEach(small => {
-    if (arrBig.some(big => `${small}` === `${big}`))
-
-      sameValues.push(small);
-
-  })
-  return sameValues
-
-};
-
 
 
 // Add the pieces
@@ -53,21 +26,21 @@ function piecesOnBoard() {
   addPieces(result, 0, BLACK_PLAYER);
   addPieces(result, 7, WHITE_PLAYER);
   for (i = 0; i < 8; i++) {
-    result.push(new Piece(1, i, PAWN, BLACK_PLAYER))
-    result.push(new Piece(6, i, PAWN, WHITE_PLAYER))
+    result.push(new Piece(1, i, PAWN, BLACK_PLAYER));
+    result.push(new Piece(6, i, PAWN, WHITE_PLAYER));
   }
   return result;
 }
 
 function addPieces(result, row, player) {
-  result.push(new Piece(row, 0, ROOK, player))
-  result.push(new Piece(row, 1, KNIGHT, player))
-  result.push(new Piece(row, 2, BISHOP, player))
-  result.push(new Piece(row, 4, QUEEN, player))
-  result.push(new Piece(row, 3, KING, player))
-  result.push(new Piece(row, 5, BISHOP, player))
-  result.push(new Piece(row, 6, KNIGHT, player))
-  result.push(new Piece(row, 7, ROOK, player))
+  result.push(new Piece(row, 0, ROOK, player));
+  result.push(new Piece(row, 1, KNIGHT, player));
+  result.push(new Piece(row, 2, BISHOP, player));
+  result.push(new Piece(row, 4, QUEEN, player));
+  result.push(new Piece(row, 3, KING, player));
+  result.push(new Piece(row, 5, BISHOP, player));
+  result.push(new Piece(row, 6, KNIGHT, player));
+  result.push(new Piece(row, 7, ROOK, player));
 }
 
 
@@ -76,56 +49,49 @@ function createChessBoard() {
   // Create background
   background = document.createElement('div');
   document.body.appendChild(background);
-  background.classList.add("background")
+  background.classList.add("background");
 
   // White player
   whitePlayer = document.createElement('div');
   textNodeWhite = document.createTextNode("White player");
-  whitePlayer.appendChild(textNodeWhite)
+  whitePlayer.appendChild(textNodeWhite);
   background.appendChild(whitePlayer);
-  whitePlayer.classList.add("whitePlayer")
+  whitePlayer.classList.add("whitePlayer");
 
   // White eat
   deletedWhite = document.createElement('div');
   whitePlayer.appendChild(deletedWhite);
-  deletedWhite.classList.add("deletedWhite")
+  deletedWhite.classList.add("deletedWhite");
 
   // Black player
   blackPlayer = document.createElement('div');
   textNodeBlack = document.createTextNode("Black player");
-  blackPlayer.appendChild(textNodeBlack)
+  blackPlayer.appendChild(textNodeBlack);
   background.appendChild(blackPlayer);
-  blackPlayer.classList.add("blackPlayer")
+  blackPlayer.classList.add("blackPlayer");
 
   // Black eat
   deletedBlack = document.createElement('div');
   blackPlayer.appendChild(deletedBlack);
-  deletedBlack.classList.add("deletedBlack")
+  deletedBlack.classList.add("deletedBlack");
 
   // Create a title
   heading = document.createElement('H1');
   textNode = document.createTextNode("Chess game");
-  heading.appendChild(textNode)
+  heading.appendChild(textNode);
   background.appendChild(heading);
   heading.classList.add("h1");
 
   // Create white turn/black turn
   turnText = document.createElement('H1');
   textNodeTurnText = document.createTextNode("white turn");
-  turnText.appendChild(textNodeTurnText)
+  turnText.appendChild(textNodeTurnText);
   background.appendChild(turnText);
   turnText.classList.add("turn");
 
-  // TO DO: create icon
-  // restart = document.createElement('img');
-  // restart.src = "icon.restart.png"
-  // background.appendChild(restart);
-  // restart.classList.add("icon")
-  // restart.addEventListener("click" ,() => )
-
 
   table = document.createElement('table');
-  table.className = "table1"
+  table.className = "table";
   background.appendChild(table);
   for (let row = 0; row < BOARD_SIZE; row++) {
     const rowElement = table.insertRow();
@@ -141,9 +107,23 @@ function createChessBoard() {
       // Create if check
       check = document.createElement('H1');
       textNodeCheck = document.createTextNode("Check");
-      check.appendChild(textNodeCheck)
+      check.appendChild(textNodeCheck);
       table.appendChild(check);
       check.classList.add("out");
+
+      // Create if check-mate white player win
+      checkMateWhite = document.createElement('H1');
+      textNodeCheckMate = document.createTextNode("check-mate white player win");
+      checkMateWhite.appendChild(textNodeCheckMate);
+      table.appendChild(checkMateWhite);
+      checkMateWhite.classList.add("out");
+
+      // Create if check-mate -black player win
+      checkMateBlack = document.createElement('H1');
+      textNodeCheckMate = document.createTextNode("check-mate black player win");
+      checkMateBlack.appendChild(textNodeCheckMate);
+      table.appendChild(checkMateBlack);
+      checkMateBlack.classList.add("out");
 
     }
   }
