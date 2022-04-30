@@ -19,6 +19,32 @@ let isThreat = false;
 let pieceNew;
 let filteredMoves;
 let canMove;
+let pieceThreat;
+
+
+function sameValueBet2arr(arr1, arr2) {
+  let arrBig, arrSmall;
+
+  if (arr1.length > arr2.length) {
+    arrBig = arr1;
+    arrSmall = arr2
+  }
+  else {
+    arrBig = arr2;
+    arrSmall = arr1
+
+  }
+  let sameValues = [];
+  arrSmall.forEach(small => {
+    if (arrBig.some(big => `${small}` === `${big}`))
+
+      sameValues.push(small);
+
+  })
+  return sameValues
+
+};
+
 
 
 // Add the pieces
@@ -84,11 +110,18 @@ function createChessBoard() {
   heading.classList.add("h1");
 
   // Create white turn/black turn
-  turn = document.createElement('H1');
-  textNodeTurn = document.createTextNode("white turn");
-  turn.appendChild(textNodeTurn)
-  background.appendChild(turn);
-  turn.classList.add("turn");
+  turnText = document.createElement('H1');
+  textNodeTurnText = document.createTextNode("white turn");
+  turnText.appendChild(textNodeTurnText)
+  background.appendChild(turnText);
+  turnText.classList.add("turn");
+
+  // TO DO: create icon
+  // restart = document.createElement('img');
+  // restart.src = "icon.restart.png"
+  // background.appendChild(restart);
+  // restart.classList.add("icon")
+  // restart.addEventListener("click" ,() => )
 
 
   table = document.createElement('table');

@@ -45,7 +45,7 @@
 .pieces{
     width: fit-content;
     height: 80px;
-    padding: 9px;
+    padding-left:  9px;
 }
 
 .selected{
@@ -122,4 +122,12 @@
     position: absolute;
     top:1000%;
     left:100%;
+}
+
+.icon{
+    position: absolute;
+    top:5%;
+    left:76%;
+    width: 50px;
+    height: fit-content;
 }

@@ -70,10 +70,12 @@ class Piece {
   changePawnToQueen() {
     if (this.type === PAWN) {
       if (this.player === WHITE_PLAYER && this.row === 0) {
-        this.type === QUEEN;
+
+        this.type = QUEEN;
+        this.appendChild(this.img)
       }
       if (this.player === BLACK_PLAYER && this.row === 7) {
-        this.type === QUEEN;
+        this.type = QUEEN;
       }
     }
   }
@@ -97,11 +99,12 @@ class Piece {
     else {
       console.log("Unknown type");
     }
-  
+
     return filteredMoves;
 
   }
 
+  // If the piece type is king
   isKing() {
     if (Piece.type === KING)
       return true
