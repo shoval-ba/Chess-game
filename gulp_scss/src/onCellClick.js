@@ -21,7 +21,7 @@ function onCellClick(event, row, col) {
         check.classList.add("out");
       }
       if (isThreat === true) {
-
+        check.textContent = "check";
         check.classList.remove("out");
         check.classList.add("check");
       }
@@ -54,6 +54,7 @@ function onCellClick(event, row, col) {
           possibleMoves = boardData.checkIfCanMove(pieceOld, possibleMoves)
         }
         if (possibleMoves === []) {
+          checkMateBlack.textContent = "check-mate black player win";
           checkMateBlack.classList.remove("out");
           checkMateBlack.classList.add("checkMate");
         }
@@ -79,6 +80,7 @@ function onCellClick(event, row, col) {
           possibleMoves = boardData.checkIfCanMove(pieceOld, possibleMoves)
         }
         if (possibleMoves === []) {
+          checkMateWhite.textContent = "check-mate white player win";
           checkMateWhite.classList.remove("out");
           checkMateWhite.classList.add("checkMate");
         }

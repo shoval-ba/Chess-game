@@ -106,21 +106,21 @@ function createChessBoard() {
 
       // Create if check
       check = document.createElement('H1');
-      textNodeCheck = document.createTextNode("Check");
+      textNodeCheck = document.createTextNode("");
       check.appendChild(textNodeCheck);
       table.appendChild(check);
-      check.classList.add("out");
+      check.classList.add("check");
 
       // Create if check-mate white player win
       checkMateWhite = document.createElement('H1');
-      textNodeCheckMate = document.createTextNode("check-mate white player win");
+      textNodeCheckMate = document.createTextNode("");
       checkMateWhite.appendChild(textNodeCheckMate);
       table.appendChild(checkMateWhite);
       checkMateWhite.classList.add("out");
 
       // Create if check-mate -black player win
       checkMateBlack = document.createElement('H1');
-      textNodeCheckMate = document.createTextNode("check-mate black player win");
+      textNodeCheckMate = document.createTextNode("");
       checkMateBlack.appendChild(textNodeCheckMate);
       table.appendChild(checkMateBlack);
       checkMateBlack.classList.add("out");
