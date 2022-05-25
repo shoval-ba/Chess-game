@@ -1,4 +1,7 @@
 class BoardData {
+  // pieces:string|number[];
+  // turn:string;
+  // opppentPosibleMove:[];
   constructor(pieces) {
     this.pieces = pieces;
     this.turn = WHITE_PLAYER;

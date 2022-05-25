@@ -2,7 +2,7 @@
 function onCellClick(event, row, col) {
 
   // Move the pieces
-  if (pieceOld != null) {
+  if (pieceOld!= null) {
     let newLocation = event.currentTarget;
     if (newLocation.classList.contains('possible-move')) {
 
